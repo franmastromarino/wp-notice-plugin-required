@@ -7,7 +7,7 @@
 		"Dashboard",
 		"Widget"
 	],
-	"type": "library",
+	"type": "jetpack-library",
 	"require": {
 		"php": ">=7.4.0"
 	},
