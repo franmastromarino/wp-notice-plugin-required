@@ -1,0 +1,28 @@
+{
+	"name": "quadlayers/wp-notice-plugin-required",
+	"description": "WP Notice Plugin Required",
+	"keywords": [
+		"WordPress",
+		"Admin",
+		"Dashboard",
+		"Widget"
+	],
+	"type": "library",
+	"require": {
+		"php": ">=7.4.0"
+	},
+	"license": "GPL-3.0",
+	"authors": [
+		{
+			"name": "QuadLayers",
+			"email": "noreply@quadlayers.com"
+		}
+	],
+	"minimum-stability": "stable",
+	"autoload": {
+		"psr-4": {
+			"QuadLayers\\WP_Notice_Plugin_Required\\": "src/"
+		},
+		"files": []
+	}
+}
