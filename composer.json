@@ -24,5 +24,8 @@
 			"QuadLayers\\WP_Notice_Plugin_Required\\": "src/"
 		},
 		"files": []
+	},
+	"extra": {
+		"textdomain": "wp-notice-plugin-required"
 	}
 }
