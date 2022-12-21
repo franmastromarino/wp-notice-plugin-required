@@ -11,26 +11,11 @@ namespace QuadLayers\WP_Notice_Plugin_Required;
 class Load {
 
 	/**
-	 * Instance of this class.
+	 * Required Plugins.
 	 *
-	 * @var object
+	 * @var array
 	 */
-	protected static $instance = array();
-
-	/**
-	 * Required Plugin slug.
-	 *
-	 * @var string
-	 */
-	protected $plugin_slug = '';
-
-	/**
-	 * Required Plugin name.
-	 *
-	 * @var string
-	 */
-	protected $plugin_name = '';
-
+	protected $plugins;
 	/**
 	 * Current Plugin name.
 	 *
@@ -38,14 +23,13 @@ class Load {
 	 */
 	protected $current_plugin_name = '';
 
-	private function __construct( array $plugin_data, string $current_plugin_name ) {
-		$this->plugin_slug         = $plugin_data['slug'];
-		$this->plugin_name         = $plugin_data['name'];
+	public function __construct( string $current_plugin_name, array $plugins = array() ) {
 		$this->current_plugin_name = $current_plugin_name;
-		add_action( 'admin_notices', array( $this, 'add_admin_notices' ) );
+		$this->plugins             = $plugins;
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 	}
 
-	function add_admin_notices() {
+	function admin_notices() {
 
 		$screen = get_current_screen();
 
@@ -53,73 +37,59 @@ class Load {
 			return;
 		}
 
-		if ( $this->is_plugin_activated() ) {
-			return;
+		foreach ( $this->plugins as $plugin ) {
+
+			if ( ! isset( $plugin['slug'], $plugin['name'] ) ) {
+				continue;
+			}
+
+			$plugin = Plugin::get_instance( $plugin['slug'], $plugin['name'] );
+
+			$notice = $this->add_notice( $plugin );
+
+			/**
+			 * If notice is added then return.
+			 * This will prevent multiple notices for same plugin.
+			 */
+			if ( $notice ) {
+				return;
+			}
+		}
+	}
+
+	private function add_notice( Plugin $plugin ) {
+
+		if ( $plugin->is_plugin_activated() ) {
+			return false;
 		}
 
-		if ( $this->is_plugin_installed() ) {
+		if ( $plugin->is_plugin_installed() ) {
 			if ( ! current_user_can( 'activate_plugins' ) ) {
-				return;
+				return false;
 			}
 			?>
 			<div class="error">
 				<p>
-					<a href="<?php echo esc_url( $this->get_plugin_activate_link() ); ?>" class='button button-secondary'><?php printf( esc_html__( 'Activate %s', 'wp-notice-plugin-required' ), esc_html( $this->plugin_name ) ); ?></a>
-					<?php printf( esc_html__( '%1$s not working because you need to activate the %2$s plugin.', 'wp-notice-plugin-required' ), esc_html( $this->current_plugin_name ), esc_html( $this->plugin_name ) ); ?>
+					<a href="<?php echo esc_url( $plugin->get_plugin_activate_link() ); ?>" class='button button - secondary'><?php printf( esc_html__( 'Activate % s', 'wp - notice - plugin - required' ), esc_html( $plugin->get_plugin_name() ) ); ?></a>
+					<?php printf( esc_html__( '%1$s not working because you need to activate the %2$s plugin . ', 'wp - notice - plugin - required' ), esc_html( $this->current_plugin_name ), esc_html( $plugin->get_plugin_name() ) ); ?>
 				</p>
 			</div>
 			<?php
-			return;
+			return true;
 		}
 
 		if ( ! current_user_can( 'install_plugins' ) ) {
-			return;
+			return false;
 		}
 		?>
 		<div class="error">
 			<p>
-				<a href="<?php echo esc_url( $this->get_plugin_install_link() ); ?>" class='button button-secondary'><?php printf( esc_html__( 'Install %s', 'wp-notice-plugin-required' ), esc_html( $this->plugin_name ) ); ?></a>
-				<?php printf( esc_html__( '%1$s not working because you need to install the %2$s plugin.', 'wp-notice-plugin-required' ), esc_html( $this->current_plugin_name ), esc_html( $this->plugin_name ) ); ?>
+				<a href="<?php echo esc_url( $plugin->get_plugin_install_link() ); ?>" class='button button - secondary'><?php printf( esc_html__( 'Install % s', 'wp - notice - plugin - required' ), esc_html( $plugin->get_plugin_name() ) ); ?></a>
+				<?php printf( esc_html__( '%1$s not working because you need to install the %2$s plugin . ', 'wp - notice - plugin - required' ), esc_html( $this->current_plugin_name ), esc_html( $plugin->get_plugin_name() ) ); ?>
 			</p>
 		</div>
 		<?php
-	}
-
-	public function is_plugin_installed() {
-		$plugin_path       = $this->get_plugin_path();
-		$installed_plugins = get_plugins();
-		return isset( $installed_plugins[ $plugin_path ] );
-	}
-
-	public function is_plugin_activated() {
-		$plugin_path = $this->get_plugin_path();
-		return is_plugin_active( $plugin_path );
-	}
-
-	private function get_plugin_path() {
-		return "{$this->plugin_slug}/{$this->plugin_slug}.php";
-	}
-
-	private function get_plugin_install_link() {
-		return wp_nonce_url( self_admin_url( "update.php?action=install-plugin&plugin={$this->plugin_slug}" ), "install-plugin_{$this->plugin_slug}" );
-	}
-
-	private function get_plugin_activate_link() {
-		$plugin_path = $this->get_plugin_path();
-		return wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $plugin_path . '&amp;plugin_status=all&amp;paged=1', 'activate-plugin_' . $plugin_path );
-	}
-
-	public static function get_instance( array $plugin_data = array(), string $current_plugin_name = 'Current Plugin Name' ) {
-
-		$plugin_slug = $plugin_data['slug'];
-
-		if ( isset( self::$instance[ $plugin_slug ] ) ) {
-			return self::$instance[ $plugin_slug ];
-		}
-
-		self::$instance[ $plugin_slug ] = new self( $plugin_data, $current_plugin_name );
-
-		return self::$instance[ $plugin_slug ];
+		return true;
 	}
 
 }

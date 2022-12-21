@@ -4,8 +4,7 @@
 	"keywords": [
 		"WordPress",
 		"Admin",
-		"Dashboard",
-		"Widget"
+		"Plugin"
 	],
 	"type": "jetpack-library",
 	"require": {
