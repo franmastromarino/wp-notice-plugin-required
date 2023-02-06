@@ -7,8 +7,10 @@
 		"Plugin"
 	],
 	"type": "jetpack-library",
-	"require": {
-		"php": ">=7.4.0"
+	"config": {
+		"platform": {
+			"php": "7.1.0"
+		}
 	},
 	"license": "GPL-3.0",
 	"authors": [
