@@ -7,11 +7,6 @@
 		"Plugin"
 	],
 	"type": "jetpack-library",
-	"config": {
-		"platform": {
-			"php": "7.1.0"
-		}
-	},
 	"license": "GPL-3.0",
 	"authors": [
 		{
@@ -20,6 +15,11 @@
 		}
 	],
 	"minimum-stability": "stable",
+	"config": {
+		"platform": {
+			"php": "7.1.0"
+		}
+	},
 	"autoload": {
 		"psr-4": {
 			"QuadLayers\\WP_Notice_Plugin_Required\\": "src/"
@@ -28,5 +28,8 @@
 	},
 	"extra": {
 		"textdomain": "wp-notice-plugin-required"
+	},
+	"require": {
+		"php": ">=7.1.0"
 	}
 }
