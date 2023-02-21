@@ -1,4 +1,13 @@
 <?php
+/**
+ * QuadLayers WP Notice Plugin Required
+ *
+ * @package   quadlayers/wp-notice-plugin-required
+ * @author    QuadLayers
+ * @link      https://github.com/quadlayers/wp-notice-plugin-required
+ * @copyright Copyright (c) 2023
+ * @license   GPL-3.0
+ */
 
 namespace QuadLayers\WP_Notice_Plugin_Required;
 
@@ -7,7 +16,6 @@ namespace QuadLayers\WP_Notice_Plugin_Required;
  *
  * @package QuadLayers\WP_Notice_Plugin_Required
  */
-
 class Load {
 
 	/**
@@ -23,13 +31,24 @@ class Load {
 	 */
 	protected $current_plugin_name = '';
 
+	/**
+	 * Load constructor.
+	 *
+	 * @param string $current_plugin_name Current Plugin name.
+	 * @param array  $plugins             Required Plugins.
+	 */
 	public function __construct( string $current_plugin_name, array $plugins = array() ) {
 		$this->current_plugin_name = $current_plugin_name;
 		$this->plugins             = $plugins;
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 	}
 
-	function admin_notices() {
+	/**
+	 * Add admin notice.
+	 *
+	 * @return void
+	 */
+	public function admin_notices() {
 
 		$screen = get_current_screen();
 
@@ -57,6 +76,13 @@ class Load {
 		}
 	}
 
+	/**
+	 * Add notice.
+	 *
+	 * @param Plugin $plugin Plugin.
+	 *
+	 * @return bool
+	 */
 	private function add_notice( Plugin $plugin ) {
 
 		if ( $plugin->is_plugin_activated() ) {
