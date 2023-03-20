@@ -34,7 +34,7 @@ class Load {
 	 * @param string $current_plugin_name Current Plugin name.
 	 * @param array  $plugins             Required Plugins.
 	 */
-	public function __construct( string $current_plugin_name, array $plugins = array() ) {
+	public function __construct( $current_plugin_name, array $plugins = array() ) {
 		$this->current_plugin_name = $current_plugin_name;
 		$this->plugins             = $plugins;
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );

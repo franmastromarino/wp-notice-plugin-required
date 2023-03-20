@@ -42,7 +42,7 @@ class Plugin {
 	 * @param string $plugin_slug Required Plugin slug.
 	 * @param string $plugin_name Required Plugin name.
 	 */
-	private function __construct( string $plugin_slug, string $plugin_name ) {
+	private function __construct( $plugin_slug, $plugin_name ) {
 		if ( ! function_exists( 'is_plugin_active' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
@@ -116,7 +116,7 @@ class Plugin {
 	 * @param string $plugin_name Required Plugin name.
 	 * @return Plugin
 	 */
-	public static function get_instance( string $plugin_slug = '', string $plugin_name = '' ) {
+	public static function get_instance( $plugin_slug = '', $plugin_name = '' ) {
 
 		$plugin_slug = $plugin_slug;
 
