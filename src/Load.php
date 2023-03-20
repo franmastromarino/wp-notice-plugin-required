@@ -3,10 +3,7 @@
  * QuadLayers WP Notice Plugin Required
  *
  * @package   quadlayers/wp-notice-plugin-required
- * @author    QuadLayers
  * @link      https://github.com/quadlayers/wp-notice-plugin-required
- * @copyright Copyright (c) 2023
- * @license   GPL-3.0
  */
 
 namespace QuadLayers\WP_Notice_Plugin_Required;
